@@ -1,0 +1,11 @@
+{
+  "name": "coding-challenge",
+  "version": "1.0.0",
+  "description": "coding challenge for front end applicants",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Julie London",
+  "license": "ISC"
+}
