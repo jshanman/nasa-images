@@ -1,0 +1,20 @@
+    <nav>
+      <h1>The Red Planet Rovers</h1>
+      <ul class="menu-container">
+        <li class="menu-button">
+          <a [routerLink]=" ['./home'] ">
+            Image of the Day
+          </a>
+        </li>
+        <li class="menu-button">
+          <a [routerLink]=" ['./gallery'] ">
+            Image Gallery
+          </a>
+        </li>
+      </ul>
+
+    </nav>
+
+    <main>
+      <router-outlet></router-outlet>
+    </main>

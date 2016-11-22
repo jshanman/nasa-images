@@ -30,3 +30,31 @@ Build a web app that displays images taken by NASA's Mars rovers, Opportunity an
 * As a user, I want the app to be responsive.
 
 * **STRETCH**: As a user, I can specify the earth date for which to display images.
+
+Service
+
+NasaImageService
+
+getImages(filter) (day, camera)
+
+getRandomImage(day)
+
+Models
+NasaImage
+
+Controller/Views
+Home
+Gallary
+
+todo
+x setup github target
+x install foundation webpack angular2
+- create service, connect to api via http
+- create home view
+- display random image
+- create menu with home and gallary
+- create gallary view
+- list all photos from yesterday, display date
+- add camera name filter
+- add date filter
+
