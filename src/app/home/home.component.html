@@ -2,7 +2,14 @@
 
 <h2>Image of the Day</h2>
 
-<div class="image-otd-container"><img src="{image}"/></div>
+<div class="ui-g">
+        <div class="ui-md-4 ui-lg-2"></div>
+        <div class="ui-g-12 ui-md-6 ui-lg-8">
+          <div *ngIf="image" class="image-otd-container"><img src="{{image.img_src}}" width="100%"/></div>
+          <div *ngIf="!image">No Images found for today.</div>
+        </div>
+        <div class="ui-lg-2"></div>
+    </div>
 
 
 </div>

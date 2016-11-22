@@ -17,11 +17,13 @@ import { AppState, InternalStateType } from './app.service';
 import { HomeComponent } from './home';
 import { GalleryComponent } from './gallery';
 import { NoContentComponent } from './no-content';
-import { XLarge } from './home/x-large';
+import { NasaImageService } from './services/NasaImage.service';
+
 
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
+  NasaImageService,
   AppState
 ];
 
@@ -40,8 +42,7 @@ type StoreType = {
     AppComponent,
     GalleryComponent,
     HomeComponent,
-    NoContentComponent,
-    XLarge
+    NoContentComponent
   ],
   imports: [ // import Angular's modules
     BrowserModule,

@@ -6,12 +6,12 @@ html, body{
 span.active {
   background-color: gray;
 }
-
+/*
 ul.menu-container {
 	position: absolute;
 	right: 1px;
 	height: 50px;	
-}
+}*/
 
 li.menu-button {
 

@@ -49,8 +49,8 @@ Gallary
 todo
 x setup github target
 x install foundation webpack angular2
-- create service, connect to api via http
-- create home view
+x create service, connect to api via http
+x create home view
 - display random image
 - create menu with home and gallary
 - create gallary view

@@ -14,8 +14,35 @@ import { URLSearchParams, QueryEncoder } from '@angular/http';
 @Injectable()
 export class NasaImageService {
 
-	readonly NASA_API_BASE = 'https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos'; // would later move this to config
+	readonly NASA_API_BASE = 'https://api.nasa.gov/mars-photos/api/v1/rovers/%rover%/photos'; // would later move this to config
 	readonly NASA_API_KEY = 'aZlmHCp3jD9sanwE8KvytidYArlTvlhwr3fEhYyM'; // would later move this to config
+	readonly ROVERS = [
+		{
+			'name': 'curiousity', 
+			'cameras': [
+				{'abbrev': 'FHAZ', 'name': 'Front Hazard Avoidance Camera'},
+				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'}
+
+			]
+		},
+		{
+			'name': 'opportunity', 
+			'cameras': [
+				{'abbrev': 'FHAZ', 'name': 'Front Hazard Avoidance Camera'},
+				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'}
+
+			]
+		},
+		{
+			'name': 'spirit', 
+			'cameras': [
+				{'abbrev': 'FHAZ', 'name': 'Front Hazard Avoidance Camera'},
+				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'}
+
+			]
+		}		
+	];
+
 
 	/*
 	 * allow http to be injected so we could inject a mock backend for testing
@@ -31,14 +58,26 @@ export class NasaImageService {
 	 * returns an observable of the image api request
 	 * @param filters Array of url params for nasa API. documented here: https://api.nasa.gov/api.html#MarsPhotos
 	 */
-	getImages(filters = []): Observable<NasaImage[]> {
+	getImages(filters = {'rover': null}): Observable<NasaImage[]> {
   		let params = new URLSearchParams();
   		params.set('api_key', this.NASA_API_KEY);
+
+  		let url = null;
+
+  		if (typeof filters.rover != "undefined" && filters.rover != null) {
+  			url = this.NASA_API_BASE.replace(/%rover%/,filters.rover);
+  			delete filters.rover;
+  		} else {
+	  		// select a random rover
+	  		let r = Math.floor(Math.random() * this.ROVERS.length);
+	  		url = this.NASA_API_BASE.replace(/%rover%/,this.ROVERS[r].name);
+   		}
+
   		for (let param in filters) {
   			params.set(param,filters[param]);
   		}
 
-		return this.http.get(this.NASA_API_BASE, { search: params })
+		return this.http.get(url, { search: params })
                     .map(this.extractData)
                     .catch(this.handleError);
 	}
@@ -55,13 +94,21 @@ export class NasaImageService {
 	 * @param date Date earth day to return a random image
 	 */
 	getImageOfTheDay(d): Observable<NasaImage[]> {
+
+
   		let params = new URLSearchParams();
   		params.set('api_key', this.NASA_API_KEY);
-  		let day = '2016-11-21';
+  		let day = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
   		params.set('earth_date', day);
 
-		return this.http.get(this.NASA_API_BASE, { search: params })
-                    .map(this.extractData)
+  		// select a random rover
+  		let r = Math.floor(Math.random() * this.ROVERS.length);
+  		let url = this.NASA_API_BASE.replace(/%rover%/,this.ROVERS[r].name);
+
+  		console.log(url);
+  		console.log(day);
+		return this.http.get(url, { search: params })
+                    .map(this.extractImageOfTheDay)
                     .catch(this.handleError);
 	}	
 
@@ -69,6 +116,7 @@ export class NasaImageService {
 	    let body = res.json();
 	    let l = body.photos.length;
 	    let r = Math.floor(Math.random() * l);
+	    console.log(body.photos[r]);
 	    return body.photos[r] || { };
   	}
 
