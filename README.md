@@ -44,17 +44,16 @@ NasaImage
 
 Controller/Views
 Home
-Gallary
+Gallery
 
 todo
 x setup github target
-x install foundation webpack angular2
+x install primeng webpack angular2
 x create service, connect to api via http
 x create home view
-- display random image
-- create menu with home and gallary
+x display random image
+x create menu with home and gallary
+x add date filter
 - create gallary view
 - list all photos from yesterday, display date
 - add camera name filter
-- add date filter
-

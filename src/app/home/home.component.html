@@ -1,15 +1,22 @@
 <div class="card-container">
 
 <h2>Image of the Day</h2>
+<p-calendar placeholder="Enter Date yyyy-mm-dd" [(ngModel)]="date" dateFormat="yy-mm-dd" (onSelect)="selectNewDate()"></p-calendar>
 
 <div class="ui-g">
         <div class="ui-md-4 ui-lg-2"></div>
         <div class="ui-g-12 ui-md-6 ui-lg-8">
-          <div *ngIf="image" class="image-otd-container"><img src="{{image.img_src}}" width="100%"/></div>
-          <div *ngIf="!image">No Images found for today.</div>
+          
+          <div *ngIf="image" class="image-otd-container"><img src="{{image.img_src}}" width="100%"/>
+          <div class="ui-g-8"></div>
+          <div class="ui-g-4 image-credit">
+            {{image.rover.name}} {{image.camera.name}}
+            <br/>{{image.earth_date | date: 'longDate'}}
+          </div>
+          </div>
+          <div *ngIf="image===false">No Images found for the selected date.</div>
+          <div *ngIf="image===null">Loading...</div>
         </div>
         <div class="ui-lg-2"></div>
     </div>
-
-
 </div>

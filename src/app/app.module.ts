@@ -18,6 +18,8 @@ import { HomeComponent } from './home';
 import { GalleryComponent } from './gallery';
 import { NoContentComponent } from './no-content';
 import { NasaImageService } from './services/NasaImage.service';
+import { CalendarModule } from 'primeng/primeng';
+
 
 
 // Application wide providers
@@ -48,7 +50,8 @@ type StoreType = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: true })
+    RouterModule.forRoot(ROUTES, { useHash: true }),
+    CalendarModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

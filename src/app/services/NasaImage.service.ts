@@ -18,7 +18,7 @@ export class NasaImageService {
 	readonly NASA_API_KEY = 'aZlmHCp3jD9sanwE8KvytidYArlTvlhwr3fEhYyM'; // would later move this to config
 	readonly ROVERS = [
 		{
-			'name': 'curiousity', 
+			'name': 'curiosity', 
 			'cameras': [
 				{'abbrev': 'FHAZ', 'name': 'Front Hazard Avoidance Camera'},
 				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'}
@@ -32,16 +32,11 @@ export class NasaImageService {
 				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'}
 
 			]
-		},
-		{
-			'name': 'spirit', 
-			'cameras': [
-				{'abbrev': 'FHAZ', 'name': 'Front Hazard Avoidance Camera'},
-				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'}
-
-			]
 		}		
 	];
+
+
+	private manifests = {};
 
 
 	/*
@@ -63,16 +58,18 @@ export class NasaImageService {
   		params.set('api_key', this.NASA_API_KEY);
 
   		let url = null;
-
+  		// if rover was sent in the params, alter the api url
   		if (typeof filters.rover != "undefined" && filters.rover != null) {
   			url = this.NASA_API_BASE.replace(/%rover%/,filters.rover);
   			delete filters.rover;
+  		// no rover was specified in the params
   		} else {
 	  		// select a random rover
 	  		let r = Math.floor(Math.random() * this.ROVERS.length);
 	  		url = this.NASA_API_BASE.replace(/%rover%/,this.ROVERS[r].name);
    		}
 
+   		// apply all filters
   		for (let param in filters) {
   			params.set(param,filters[param]);
   		}
@@ -82,7 +79,7 @@ export class NasaImageService {
                     .catch(this.handleError);
 	}
 
-
+	// extras the photos from the response
   	private extractData(res: Response) {
 	    let body = res.json();
 	    return body.photos || { };
@@ -94,34 +91,55 @@ export class NasaImageService {
 	 * @param date Date earth day to return a random image
 	 */
 	getImageOfTheDay(d): Observable<NasaImage[]> {
+		// date in yyyy-mm-dd format
+  		let day = d.getFullYear()+'-'+('0' + (d.getMonth()+1)).slice(-2)+'-'+('0' + d.getDate()).slice(-2);
 
-
+  		// apply api key
   		let params = new URLSearchParams();
   		params.set('api_key', this.NASA_API_KEY);
-  		let day = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+
+  		// apply date
   		params.set('earth_date', day);
 
   		// select a random rover
-  		let r = Math.floor(Math.random() * this.ROVERS.length);
-  		let url = this.NASA_API_BASE.replace(/%rover%/,this.ROVERS[r].name);
+  		let rover_index = Math.floor(Math.random() * this.ROVERS.length);
 
-  		console.log(url);
-  		console.log(day);
+  		// build url
+  		let url = this.NASA_API_BASE.replace(/%rover%/,this.ROVERS[rover_index].name);
+
+  		// search the first rover
 		return this.http.get(url, { search: params })
                     .map(this.extractImageOfTheDay)
-                    .catch(this.handleError);
+                    .catch((error: Response | any) => { 
+                   		if (error instanceof Response) {
+
+                  			let body = error.json() || '';
+                  			// if the error is no photos found for this day
+                  			if (body.errors && body.errors == "No Photos Found") {
+                  				// try the other rover
+                  				let next_rover_index = (rover_index == 1) ? 0 : 1;
+                  				let url = this.NASA_API_BASE.replace(/%rover%/,this.ROVERS[next_rover_index].name);
+
+				        		return this.http.get(url, { search: params })
+                				    .map(this.extractImageOfTheDay)
+                    				.catch(this.handleError);
+                  			}
+                  		}
+                  		// if different error, send to regular error handler
+                  		return this.handleError(error);
+                  	});
 	}	
 
+	// picks one random image from the result set
   	private extractImageOfTheDay(res: Response) {
 	    let body = res.json();
 	    let l = body.photos.length;
 	    let r = Math.floor(Math.random() * l);
-	    console.log(body.photos[r]);
 	    return body.photos[r] || { };
   	}
 
+  	// note the error in the console
   	private handleError (error: Response | any) {
-	    // In a real world app, we might use a remote logging infrastructure
 	    let errMsg: string;
 	    if (error instanceof Response) {
 	      const body = error.json() || '';

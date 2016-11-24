@@ -4,7 +4,7 @@ html, body{
 }
 
 span.active {
-  background-color: gray;
+  background-color: #D3D3D3;
 }
 /*
 ul.menu-container {
@@ -15,9 +15,22 @@ ul.menu-container {
 
 li.menu-button {
 
-	background-color: gray;
+	background-color: #D3D3D3;
 	border: 1px #000;
-	padding: 10px;
 	list-style: none;
 	display: inline-block;
+	text-align:center;
+	cursor: pointer;
+}
+
+li.menu-button a:link, a:visited, a:hover {
+	color: #000;
+	display: block;
+	padding: 25px;
+
+}
+
+.image-credit {
+	color: #ccc;
+	text-align: right;
 }
