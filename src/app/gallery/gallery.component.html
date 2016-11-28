@@ -1,2 +1,54 @@
     <h1>Gallery</h1>
-WIP
+Date <p-calendar placeholder="Enter Date yyyy-mm-dd" [(ngModel)]="date" dateFormat="yy-mm-dd" (onSelect)="selectNewDate()"></p-calendar>
+
+<div class="ui-g-12">
+  <div class="ui-g-12 ui-md-9">
+    <h2>Curiosity {{curiositySelectedCamera.name}}</h2>
+  </div>
+  <div class="ui-g-12 ui-md-3">
+    <p-dropdown [options]="curiosityCameras" [(ngModel)]="curiositySelectedCameraValue" (onChange)="onCameraSelect('curiosity')"></p-dropdown>
+  </div>
+</div>
+
+<div class="ui-g-12">
+<p-dataGrid [value]="images_curiosity">
+    <template let-image>
+        <div class="ui-g-12 ui-md-3 gallery-image-box">
+            
+              <img src="{{image.img_src}}" width="100%"/>
+              <br/>
+              <div class="ui-g-12 image-credit">{{image.earth_date | date: 'longDate'}}</div>
+
+        </div>
+    </template>
+</p-dataGrid>
+          <div *ngIf="images_curiosity && images_curiosity.length===0">No Images found for the selected date and camera.</div>
+          <div *ngIf="images_curiosity===null">Loading...</div>
+</div>
+
+
+<div class="ui-g-12">
+<div class="ui-g-12 ui-md-9">
+<h2>Opportunity {{opportunitySelectedCamera.name}}</h2>
+</div>
+<div class="ui-g-12 ui-md-3">
+<p-dropdown [options]="opportunityCameras" [(ngModel)]="opportunitySelectedCameraValue" (onChange)="onCameraSelect('opportunity')"></p-dropdown>
+</div>
+</div>
+
+
+<div class="ui-g-12">
+<p-dataGrid [value]="images_opportunity">
+    <template let-image>
+        <div class="ui-g-12 ui-md-3 gallery-image-box">
+            
+              <img src="{{image.img_src}}" width="100%"/>
+              <br/>
+              <div class="ui-g-12 image-credit">{{image.earth_date | date: 'longDate'}}</div>
+
+        </div>
+    </template>
+</p-dataGrid>
+          <div *ngIf="images_opportunity && images_opportunity.length===0">No Images found for the selected date and camera.</div>
+          <div *ngIf="images_opportunity===null">Loading...</div>
+</div>

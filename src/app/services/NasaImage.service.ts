@@ -21,20 +21,25 @@ export class NasaImageService {
 			'name': 'curiosity', 
 			'cameras': [
 				{'abbrev': 'FHAZ', 'name': 'Front Hazard Avoidance Camera'},
-				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'}
-
+				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'},
+				{'abbrev': 'MAST', 'name': 'Mast Camera'},				
+				{'abbrev': 'CHEMCAM', 'name': 'Chemistry and Camera Complex'},
+				{'abbrev': 'MAHLI', 'name': 'Mars Hand Lens Imager'},
+				{'abbrev': 'MARDI', 'name': 'Mars Descent Imager'},
+				{'abbrev': 'NAVCAM', 'name': 'Navigation Camera'}
 			]
 		},
 		{
 			'name': 'opportunity', 
 			'cameras': [
 				{'abbrev': 'FHAZ', 'name': 'Front Hazard Avoidance Camera'},
-				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'}
-
+				{'abbrev': 'RHAZ', 'name': 'Rear Hazard Avoidance Camera'},
+				{'abbrev': 'NAVCAM', 'name': 'Navigation Camera'},
+				{'abbrev': 'PANCAM', 'name': 'Panoramic Camera'},
+				{'abbrev': 'MINITES', 'name': 'Miniature Thermal Emission Spectrometer'}
 			]
 		}		
 	];
-
 
 	private manifests = {};
 
@@ -71,6 +76,10 @@ export class NasaImageService {
 
    		// apply all filters
   		for (let param in filters) {
+  			if (param == "earth_date" && filters[param] instanceof Date) {
+  				let d = filters[param];
+  				filters[param] = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();		
+  			}
   			params.set(param,filters[param]);
   		}
 
@@ -116,7 +125,7 @@ export class NasaImageService {
                   			let body = error.json() || '';
                   			// if the error is no photos found for this day
                   			if (body.errors && body.errors == "No Photos Found") {
-                  				// try the other rover
+                  				// try the other rover @fixme if there are additional rovers added
                   				let next_rover_index = (rover_index == 1) ? 0 : 1;
                   				let url = this.NASA_API_BASE.replace(/%rover%/,this.ROVERS[next_rover_index].name);
 
@@ -136,6 +145,17 @@ export class NasaImageService {
 	    let l = body.photos.length;
 	    let r = Math.floor(Math.random() * l);
 	    return body.photos[r] || { };
+  	}
+
+  	// returns the rover data array for the specific rover by name
+  	// @thows TypeError
+  	getRover(rover: string) {
+  		for (let r = 0; r < this.ROVERS.length; r++) {
+  			if (this.ROVERS[r].name == rover) {
+  				return this.ROVERS[r];
+  			}
+  		}
+  		throw new TypeError('Invalid rover sent to getRover: '+rover);	
   	}
 
   	// note the error in the console

@@ -48,7 +48,6 @@ export class HomeComponent {
     this.nasaImageService.getImageOfTheDay(this.date).subscribe(
                        image => {
                          this.image = image;
-                         console.log(image);
                        },
                        error =>  {
                          this.errorMessage = <any>error;

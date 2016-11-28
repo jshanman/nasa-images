@@ -1,6 +1,3 @@
-## Client Engineering Coding Challenge for Front End Job Candidates
-
-
 ### Challenge
 
 Build a web app that displays images taken by NASA's Mars rovers, Opportunity and Curiosity.
@@ -31,11 +28,21 @@ Build a web app that displays images taken by NASA's Mars rovers, Opportunity an
 
 * **STRETCH**: As a user, I can specify the earth date for which to display images.
 
+### Environment Requirements
+* npm
+
+
+### Build Instructions
+* clone repo
+* npm install
+* npm start
+* open http://localhost:3000
+
 Service
 
 NasaImageService
 
-getImages(filter) (day, camera)
+getImages(filter) (day, rover, camera)
 
 getRandomImage(day)
 
@@ -54,6 +61,10 @@ x create home view
 x display random image
 x create menu with home and gallary
 x add date filter
-- create gallary view
-- list all photos from yesterday, display date
-- add camera name filter
+x create gallary view
+x list all photos from yesterday, display date
+x add camera name filter
+x add date selector to gallery
+- add gallery tests
+- add image of the day tests
+- remove bloat from starter lib
