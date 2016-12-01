@@ -11,8 +11,6 @@ Build a web app that displays images taken by NASA's Mars rovers, Opportunity an
 
 * Document the build and installation processes.
 
-* At the end of 2 hours, upload your app to your github repo and send the url to your Studio Tech contact. You may continue to check in code afterwards if you like.
-
 
 ### User Stories
 
@@ -38,33 +36,43 @@ Build a web app that displays images taken by NASA's Mars rovers, Opportunity an
 * npm start
 * open http://localhost:3000
 
-Service
+### Testing
+* npm test
 
-NasaImageService
+### Plan
 
-getImages(filter) (day, rover, camera)
+## Service
 
-getRandomImage(day)
+# NasaImageService
 
-Models
-NasaImage
+* getImages(filter) (day, rover, camera)
 
-Controller/Views
-Home
-Gallery
+* getRandomImage(day)
 
-todo
-x setup github target
-x install primeng webpack angular2
-x create service, connect to api via http
-x create home view
-x display random image
-x create menu with home and gallary
-x add date filter
-x create gallary view
-x list all photos from yesterday, display date
-x add camera name filter
-x add date selector to gallery
-- add gallery tests
-- add image of the day tests
-- remove bloat from starter lib
+# Models
+* NasaImage
+
+# Controller/Views
+* Home
+* Gallery
+
+To Do
+- x setup github target
+- x install primeng webpack angular2
+- x create service, connect to api via http
+- x create home view
+- x display random image
+- x create menu with home and gallary
+- x add date filter
+- x create gallary view
+- x list all photos from yesterday, display date
+- x add camera name filter
+- x add date selector to gallery
+- x add nasa image service tests
+- [] add gallery tests
+- [] add image of the day tests
+- [] remove bloat from starter lib
+- [] refactor to use the NasaImage model and correct model
+- [] get e2e testing working and write e2e tests
+- [] review linter and cleanup
+- [] fix date displays for local timezone

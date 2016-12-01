@@ -30,8 +30,10 @@ export class HomeComponent {
     // yesterday
     d.setDate(d.getDate() - 1);
 
+    // set date
     this.date = d;
 
+    // get image of the day for this date
     this.nasaImageService.getImageOfTheDay(d).subscribe(
                        image => this.image = image,
                        error =>  {
@@ -48,6 +50,7 @@ export class HomeComponent {
     this.nasaImageService.getImageOfTheDay(this.date).subscribe(
                        image => {
                          this.image = image;
+                         console.log(image);
                        },
                        error =>  {
                          this.errorMessage = <any>error;

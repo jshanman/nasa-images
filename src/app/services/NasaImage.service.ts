@@ -7,6 +7,7 @@ import { Http, Response } from '@angular/http';
 import { Observable }     from 'rxjs/Observable';
 
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 
 import { URLSearchParams, QueryEncoder } from '@angular/http';
 
@@ -41,9 +42,6 @@ export class NasaImageService {
 		}		
 	];
 
-	private manifests = {};
-
-
 	/*
 	 * allow http to be injected so we could inject a mock backend for testing
 	 */
@@ -58,48 +56,31 @@ export class NasaImageService {
 	 * returns an observable of the image api request
 	 * @param filters Array of url params for nasa API. documented here: https://api.nasa.gov/api.html#MarsPhotos
 	 */
-	getImages(filters = {'rover': null}): Observable<NasaImage[]> {
+	getImages(rover: string, earth_date: Date, camera?: string): Observable<[any]> {
   		let params = new URLSearchParams();
   		params.set('api_key', this.NASA_API_KEY);
 
-  		let url = null;
   		// if rover was sent in the params, alter the api url
-  		if (typeof filters.rover != "undefined" && filters.rover != null) {
-  			url = this.NASA_API_BASE.replace(/%rover%/,filters.rover);
-  			delete filters.rover;
-  		// no rover was specified in the params
-  		} else {
-	  		// select a random rover
-	  		let r = Math.floor(Math.random() * this.ROVERS.length);
-	  		url = this.NASA_API_BASE.replace(/%rover%/,this.ROVERS[r].name);
-   		}
+  		let url = this.NASA_API_BASE.replace(/%rover%/,rover);
 
    		// apply all filters
-  		for (let param in filters) {
-  			if (param == "earth_date" && filters[param] instanceof Date) {
-  				let d = filters[param];
-  				filters[param] = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();		
-  			}
-  			params.set(param,filters[param]);
-  		}
+  		let date_str = earth_date.getFullYear()+'-'+(earth_date.getMonth()+1)+'-'+earth_date.getDate();		
+      params.set('earth_date',date_str);  
 
-		return this.http.get(url, { search: params })
+      if (typeof camera !== "undefined" && camera !== null) {
+        params.set('camera',camera);         
+      }
+
+		  return this.http.get(url, { search: params })
                     .map(this.extractData)
                     .catch(this.handleError);
 	}
-
-	// extras the photos from the response
-  	private extractData(res: Response) {
-	    let body = res.json();
-	    return body.photos || { };
-  	}
-
 
 	/*
 	 * returns an observable of the image api request
 	 * @param date Date earth day to return a random image
 	 */
-	getImageOfTheDay(d): Observable<NasaImage[]> {
+	getImageOfTheDay(d): Observable<[any]> {
 		// date in yyyy-mm-dd format
   		let day = d.getFullYear()+'-'+('0' + (d.getMonth()+1)).slice(-2)+'-'+('0' + d.getDate()).slice(-2);
 
@@ -139,14 +120,6 @@ export class NasaImageService {
                   	});
 	}	
 
-	// picks one random image from the result set
-  	private extractImageOfTheDay(res: Response) {
-	    let body = res.json();
-	    let l = body.photos.length;
-	    let r = Math.floor(Math.random() * l);
-	    return body.photos[r] || { };
-  	}
-
   	// returns the rover data array for the specific rover by name
   	// @thows TypeError
   	getRover(rover: string) {
@@ -157,6 +130,27 @@ export class NasaImageService {
   		}
   		throw new TypeError('Invalid rover sent to getRover: '+rover);	
   	}
+
+  // picks one random image from the result set
+    private extractImageOfTheDay(res: Response) {
+      let body = res.json();
+      let l = body.photos.length;
+      let r = Math.floor(Math.random() * l);
+      let image = body.photos[r];
+      image.earth_date = new Date(image.earth_date+'T00:00:00-0800');
+      return image || { };
+    }
+
+
+  // extras the photos from the response
+    private extractData(res: Response) {
+      let body = res.json();
+      for (let i = 0; i < body.photos.length; i++) {
+        body.photos[i].earth_date = new Date(body.photos[i].earth_date+'T00:00:00-0800');
+      }
+      return body.photos || { };
+    }
+
 
   	// note the error in the console
   	private handleError (error: Response | any) {

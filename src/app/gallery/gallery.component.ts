@@ -36,16 +36,28 @@ export class GalleryComponent {
     this.date = d;
 
     // populate cameras
-    this.curiosityCameras = this.nasaImageService.getRover('curiosity').cameras.map((rover) => {let o: any = {}; o.label = rover.name; o.value=rover.abbrev; return o;});
+    this.curiosityCameras = this.nasaImageService.getRover('curiosity').cameras.map((rover) => 
+      {
+        let o: any = {}; 
+        o.label = rover.name; 
+        o.value=rover.abbrev; 
+        return o;
+       });
 
     this.opportunitySelectedCamera = this.curiosityCameras[0];
 
-    this.opportunityCameras = this.nasaImageService.getRover('opportunity').cameras.map((rover) => {let o: any = {}; o.label = rover.name; o.value=rover.abbrev; return o;});
+    this.opportunityCameras = this.nasaImageService.getRover('opportunity').cameras.map((rover) => 
+      {
+        let o: any = {}; 
+        o.label = rover.name; 
+        o.value=rover.abbrev; 
+        return o;
+      });
 
     this.curiositySelectedCamera = this.opportunityCameras[0];
 
 
-    this.nasaImageService.getImages({'earth_date': this.date, 'rover': 'curiosity'}).subscribe(
+    this.nasaImageService.getImages('curiosity',this.date).subscribe(
                        images_curiosity => this.images_curiosity = images_curiosity,
                        error => {
                          this.errorMessage = <any>error;
@@ -53,7 +65,7 @@ export class GalleryComponent {
                        } );
 
 
-    this.nasaImageService.getImages({'earth_date': this.date, 'rover': 'opportunity'}).subscribe(
+    this.nasaImageService.getImages('opportunity',this.date).subscribe(
                        images_opportunity => this.images_opportunity = images_opportunity,
                        error =>  {
                          this.errorMessage = <any>error;
@@ -80,7 +92,7 @@ export class GalleryComponent {
       }
     }
     // get images
-    this.nasaImageService.getImages({'earth_date': this.date, 'rover': rover, 'camera': this[rover+'SelectedCameraValue']}).subscribe(
+    this.nasaImageService.getImages(rover, this.date,this[rover+'SelectedCameraValue']).subscribe(
                        images => this['images_'+rover] = images,
                        error =>  {
                          this.errorMessage = <any>error;
